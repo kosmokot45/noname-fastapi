@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
@@ -27,4 +28,4 @@ class User(BaseModel):
     id: int
     role: str
     name: str
-    degree: Degree
+    degree: Optional[List[Degree]] = []

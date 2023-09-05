@@ -1,9 +1,21 @@
 from typing import List
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from data import users, users2, f_trades
 from models import Trade, User
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import ResponseValidationError
+from fastapi.responses import JSONResponse
 
 app = FastAPI(title='2nd')
+
+
+# if user need valid error
+@app.exception_handler(ResponseValidationError)
+async def validation_exception_handler(request: Request, exc: ResponseValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder({"detail": exc.errors()}),
+    )
 
 
 @app.get("/users/{user_id}", response_model=List[User])
@@ -26,5 +38,5 @@ def change_user_name(user_id: int, new_name: str):
 
 @app.post("/trades")
 def add_trades(trades: List[Trade]):
-    f_trades.extend(trades)
+    f_trades.extend(trades)  # type: ignore
     return {"status": 200, "data": f_trades}
