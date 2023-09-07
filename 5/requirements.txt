@@ -1,5 +1,5 @@
 fastapi[all]
 sqlalchemy
 alembic
-psycopg2
+asyncpg
 fastapi_users[sqlalchemy]
